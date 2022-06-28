@@ -3,7 +3,7 @@
 
 ### Features
 
-* add button and input component ([c4dcb33](https://github.com/LantzShaw/litecase-ui/commit/c4dcb338d94e12c75b4144f06c1ca3ed5fe81118))
+* add button and input component ([0426707](https://github.com/LantzShaw/litecase-ui/commit/042670750e915f7ad634971899e588ec576e8b37))
 
 
 
