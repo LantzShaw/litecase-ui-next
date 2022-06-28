@@ -19,7 +19,6 @@
   "license": "MIT",
   "contributors": [
     {
-      "name": "Lantz",
       "email": "lantzshaw@gmail.com",
       "url": "http://www.litecase.cn"
     }
@@ -38,10 +37,15 @@
     "prepare": "husky install"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.0.3",
+    "@commitlint/config-conventional": "^17.0.3",
     "@types/react": "^18.0.14",
     "husky": "^8.0.1",
+    "less": "^4.1.3",
+    "lint-staged": "^13.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "rollup": "^2.75.7"
+    "rollup": "^2.75.7",
+    "typescript": "^4.7.4"
   }
 }

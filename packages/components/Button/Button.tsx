@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, MouseEventHandler, ReactNode } from 'react';
+import type { FC, ReactElement, MouseEventHandler, ReactNode } from 'react';
 
 export interface BaseButtonProps {
   type?: 'primary' | 'secondary' | 'default';
