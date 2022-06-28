@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from 'react';
+import type { FC, ReactElement } from 'react';
 
 export interface InputProps {}
 
