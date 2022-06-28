@@ -2,6 +2,7 @@
 node_modules
 /dist
 
+RECORD.md
 
 # local env files
 .env.local
