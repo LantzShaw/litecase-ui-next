@@ -35,12 +35,12 @@ jobs:
       - name: copy dist with scp
         uses: appleboy/scp-action@v0.0.1
         with:
-          host: ""
-          username: ""
-          password: ""
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USERNAME }}
+          password: ${{ secrets.REMOTE_PASSWORD }}
           port: 22
           source: "docs/"
-          target: ""
+          target: ${{ secrets.REMOTE_TARGET }}
       
             
       
