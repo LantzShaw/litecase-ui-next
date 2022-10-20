@@ -63,6 +63,9 @@ module.exports = {
 ```js
 import typescript from '@rollup/plugin-typescript';
 
+// 类型声明文件（需要单独输出）
+import dts from 'rollup-plugin-dts';
+
 // ES6转ES5
 import babel from '@rollup/plugin-babel';
 
@@ -223,3 +226,60 @@ export default [
 ### Questions
 
 1. 由于在 packge.json 中设置了`"type": "module"`, 这时你需要将`rollup.config.js` 修改为 `rollup.config.mjs`, 否则打包会报错
+
+2. `rollup.config.dev.js` or `rollup.config.prod.js`
+
+### Reference
+
+1. [rollup 打包 TypeScript 库，输出 js 文件+类型声明文件](https://blog.csdn.net/OldDreamHYN/article/details/110090563)
+
+2. [rollup 使用教程](https://juejin.cn/post/6956501799327137828)
+
+3. 需要通过`rollup`启动项目，可以另外配置一项开发环境 `rollup.config.dev.js`, 配置如下:
+
+```js
+// rollup.config.dev.js
+import postcss from 'rollup-plugin-postcss';
+import serve from 'rollup-plugin-serve';
+import livereload from 'rollup-plugin-livereload';
+
+export default {
+  input: './src/main.ts',
+  output: {
+    file: './dist/bundle.ts',
+    format: 'cjs',
+    name: 'LitecaseUI',
+    sourcemap: true, // 开发环境下可以开启，方便调试
+  },
+
+  plugins: [
+    postcss(),
+    livereload(),
+    serve({
+      open: true,
+      contentBase: 'dist',
+    }),
+  ],
+};
+
+// package.json
+{
+  ...rest,
+   "scripts": {
+    "build": "rollup --config",
+    "dev": "rollup --config -w"
+  },
+}
+```
+
+### Others
+
+some rollup plugins
+
+```sh
+rollup-plugin-postcss
+
+rollup-plugin-serve
+
+rollup-plugin-livereload
+```
