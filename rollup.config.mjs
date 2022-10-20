@@ -13,8 +13,9 @@ export default {
   input: './packages/index.ts',
   output: {
     file: './lib/litecase-ui.min.js',
-    format: 'es',
+    format: 'umd',
     name: 'LitecaseUI',
+    sourcemap: false,
     globals,
   },
   external: Object.keys(globals),
