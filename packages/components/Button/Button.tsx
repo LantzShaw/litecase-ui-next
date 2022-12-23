@@ -12,7 +12,7 @@ export type PrimaryButtonProps = {
 const Button: FC<PrimaryButtonProps> = (props): ReactElement => {
   const { type = 'default', ...rest } = props;
 
-  console.log(rest);
+  console.log("hello, I'm buttom");
 
   return (
     <>

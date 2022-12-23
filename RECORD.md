@@ -15,7 +15,7 @@ $ git show v0.0.0-beta.1
 $ git push origin v0.0.0-beta.1
 
 # 推送所有的tag
-$ git push origin --tags
+$ git push origin master --tags
 ```
 
 ```sh
@@ -24,6 +24,8 @@ rollup --config rollup.config.js
 or
 
 rollup -c rollup.config.js
+
+# rollup -c指的默认执行根目录下的rollup.config.js
 ```
 
 rollup 打包需要的依赖
@@ -60,6 +62,8 @@ module.exports = {
 
 `rollup.config.js`
 
+rollup 支持的打包文件的格式有 amd, cjs, es\esm, iife, umd。其中，amd 为 AMD 标准，cjs 为 CommonJS 标准，esm\es 为 ES 模块标准，iife 为立即调用函数， umd 同时支持 amd、cjs 和 iife.[参考文章](https://juejin.cn/post/7145090564801691684)
+
 ```js
 import typescript from '@rollup/plugin-typescript';
 
@@ -72,7 +76,7 @@ import babel from '@rollup/plugin-babel';
 // 将非ES6语法转换为ES6可用
 import commonjs from '@rollup/plugin-commonjs';
 
-// 帮助寻找node_modules里的包
+// esm 帮助寻找node_modules里的包
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 
 /**
@@ -186,22 +190,73 @@ export default {
 
 `rollup.config.js`参考
 
+1. 配置参考文章:
+   https://juejin.cn/post/7145090564801691684
+2. 项目参考:
+   https://github.com/jiaozitang/react-masonry-component2/blob/dev/rollup.config.js
+3. https://juejin.cn/post/6847902221733101575
+
 ```js
+// 打包输出文件保留原始模块结构
+// 自动将 dependencies 依赖声明为 externals
+// 支持处理外部 npm 依赖
+// 支持基于 CommonJS 模块引入
+// 支持 typescript，并导出声明文件
+// 支持 scss，并添加前缀
+// 支持自动清除调试代码
+// 支持按需加载
+
+// rollup 支持输出格式为 es 模块化，就会按模块输出。
+
+// 所以我们上面的配置已经实现了按需加载了。
+
+// 去除注释等无效代码
+import awesome from 'rollup-plugin-awesome';
+import cleanup from 'rollup-plugin-cleanup';
+
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+// rollup.js 编译源码中的模块引用默认只支持 ES6+的模块方式 import/export。然而大量的 npm 模块是基于 CommonJS 模块方式，这就导致了大量 npm 模块不能直接编译使用。
+// 需要添加 @rollup/plugin-commonjs 插件来支持基于 CommonJS 模块方式 npm 包。
 import commonjs from '@rollup/plugin-commonjs';
 import babel from '@rollup/plugin-babel';
+// 每个类库都要手动添加至 externals 未免太麻烦，这时候可以用 rollup-plugin-node-externals 插件，自动将外部类库声明为 externals。
 import externals from 'rollup-plugin-node-externals';
 import del from 'rollup-plugin-delete';
+// rollup-plugin-postcss 默认集成了对 scss、less、stylus 的支持。
+import postcss from 'rollup-plugin-postcss';
+// css加前缀
+import autoprefixer from 'autoprefixer';
+// css 压缩
+import cssnano from 'cssnano';
+
+// 支持Ts 文件
+import typescript from '@rollup/plugin-typescript';
+
+// 打包产物清除调试代码
+// 用于从代码中删除 debugger 语句和函数。包括 assert.equal、console.log 等等
+import strip from '@rollup/plugin-strip';
+
 import pkg from './package.json';
 
 export default [
   {
     input: './src/index.ts',
+    output: {
+      dir: path.dirname('dist/bundle.js'),
+      format: 'es',
+      exports: 'named', // 指定导出模式（自动、默认、命名、无）
+      preserveModules: true, // 保留模块结构 打包输出文件保留原始模块结构
+      preserveModulesRoot: 'src', // 将保留的模块放在根级别的此路径下
+    },
+
     plugins: [
       // Delete existing build files.
       del({ targets: 'dist/*' }),
       // Leave out third-party dependencies (listed under `package.json`'s `dependencies` option) from the bundled outputs. For example, this library hosts components written with React. We can assume that developers using this library will already have React imported in their applications. And so, why include React in the bundled output and add unnecessary bloat?
-      externals({ deps: true }),
+      externals({
+        deps: true,
+        devDeps: false, // devDependencies 类型的依赖就不用加到 externals 了。
+      }),
       // Find third-party modules within `node_modules` with any one of the following file extensions: `.js`, `.ts` and `.tsx`.
       nodeResolve({
         extensions: ['.js', '.ts', '.tsx'],
@@ -214,6 +269,20 @@ export default [
         exclude: '**/node_modules/**',
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
       }),
+
+      postcss({
+        plugins: [autoprefixer(), cssnano()],
+        extract: 'css/index.css', // 抽离单独的 css 文件
+      }),
+
+      typescript({
+        // 导出类型声明文件
+        outDir: 'dist',
+        declaration: true,
+        declarationDir: 'dist',
+      }),
+
+      strip(),
     ],
     output: [
       { file: pkg.main, format: 'cjs' },
@@ -221,6 +290,123 @@ export default [
     ],
   },
 ];
+```
+
+```javascript
+// 参考链接:  https://juejin.cn/post/6847902221733101575
+
+// Rollup plugins
+// babel插件用于处理es6代码的转换，使转换出来的代码可以用于不支持es6的环境使用
+import babel from 'rollup-plugin-babel';
+// resolve将我们编写的源码与依赖的第三方库进行合并
+import resolve from 'rollup-plugin-node-resolve';
+// 解决rollup.js无法识别CommonJS模块
+import commonjs from 'rollup-plugin-commonjs';
+// 全局替换变量比如process.env
+import replace from 'rollup-plugin-replace';
+// 使rollup可以使用postCss处理样式文件less、css等
+import postcss from 'rollup-plugin-postcss';
+// 可以处理组件中import图片的方式，将图片转换成base64格式，但会增加打包体积，适用于小图标
+import image from '@rollup/plugin-image';
+// 压缩打包代码（这里弃用因为该插件不能识别es的语法，所以采用terser替代）
+// import { uglify } from 'rollup-plugin-uglify';
+// 压缩打包代码
+import { terser } from 'rollup-plugin-terser';
+// import less from 'rollup-plugin-less';
+// PostCSS plugins
+// 处理css定义的变量
+import simplevars from 'postcss-simple-vars';
+// 处理less嵌套样式写法
+import nested from 'postcss-nested';
+// 可以提前适用最新css特性（已废弃由postcss-preset-env替代，但还是引用进来了。。。）
+// import cssnext from 'postcss-cssnext';
+// 替代cssnext
+import postcssPresetEnv from 'postcss-preset-env';
+// css代码压缩
+import cssnano from 'cssnano';
+
+const env = process.env.NODE_ENV;
+
+export default {
+  // 入口文件我这里在components下统一导出所有自定义的组件
+  input: 'src/components/index.js',
+  // 输出文件夹，可以是个数组输出不同格式（umd,cjs,es...）通过env是否是生产环境打包来决定文件命名是否是.min
+  output: [
+    {
+      file: `dist/dna-ui-react-umd${env === 'production' ? '.min' : ''}.js`,
+      format: 'umd',
+      name: 'geneUI',
+    },
+    {
+      file: `dist/dna-ui-react-es${env === 'production' ? '.min' : ''}.js`,
+      format: 'es',
+    },
+  ],
+  // 注入全局变量比如jQuery的$这里只是尝试 并未启用
+  // globals: {
+  //   react: 'React',                                         // 这跟external 是配套使用的，指明global.React即是外部依赖react
+  //   antd: 'antd'
+  // },
+  // 自定义警告事件，这里由于会报THIS_IS_UNDEFINED警告，这里手动过滤掉
+  onwarn: function (warning) {
+    if (warning.code === 'THIS_IS_UNDEFINED') {
+      return;
+    }
+  },
+  // 将模块视为外部模块，不会打包在库中
+  external: ['antd', '@ant-design/icons', 'react', 'prop-types', 'gojs'],
+  // 插件
+  plugins: [
+    image(),
+    postcss({
+      plugins: [
+        simplevars(),
+        nested(),
+        // cssnext({ warnForDuplicates: false, }),
+        postcssPresetEnv(),
+        cssnano(),
+      ],
+      // 处理.css和.less文件
+      extensions: ['.css', 'less'],
+    }),
+    resolve(),
+    // babel处理不包含node_modules文件的所有js
+    babel({
+      exclude: '**/node_modules/**',
+      runtimeHelpers: true,
+      plugins: ['@babel/plugin-external-helpers'],
+    }),
+    // 这里有些引入使用某个库的api但报未导出改api通过namedExports来手动导出
+    commonjs({
+      namedExports: {
+        'node_modules/react-is/index.js': ['isFragment'],
+        'node_modules/react/index.js': [
+          'Fragment',
+          'cloneElement',
+          'isValidElement',
+          'Children',
+          'createContext',
+          'Component',
+          'useRef',
+          'useImperativeHandle',
+          'forwardRef',
+          'useState',
+          'useEffect',
+          'useMemo',
+        ],
+        'node_modules/react-dom/index.js': ['render', 'unmountComponentAtNode', 'findDOMNode'],
+        'node_modules/gojs/release/go.js': ['Diagram', 'GraphLinksModel', 'Overview', 'Spot'],
+      },
+    }),
+    // 全局替换NODE_ENV，exclude表示不包含某些文件夹下的文件
+    replace({
+      // exclude: 'node_modules/**',
+      'process.env.NODE_ENV': JSON.stringify(env || 'development'),
+    }),
+    // 生产环境执行terser压缩代码
+    env === 'production' && terser(),
+  ],
+};
 ```
 
 ### Questions
@@ -270,6 +456,36 @@ export default {
     "dev": "rollup --config -w"
   },
 }
+```
+
+4. 为什么是 rollup 而不是 webpack 呢？
+   rollup 的特色是 ES6 模块和代码 Tree-shaking，这些 webpack 同样支持，除此之外 webpack 还支持热模块替换、代码分割、静态资源导入等更多功能。
+   当开发应用时当然优先选择的是 webpack，但是若你项目只需要打包出一个简单的 bundle 包，并是基于 ES6 模块开发的，可以考虑使用 rollup。
+   rollup 相比 webpack，它更少的功能和更简单的 api，是我们在打包类库时选择它的原因。
+
+5. 使用 `@rollup/plugin-typescript`
+
+打包报错:
+
+```sh
+[!] (plugin typescript) RollupError: @rollup/plugin-typescript: Path of Typescript compiler option 'outDir' must be l
+ocated inside Rollup 'dir' option.
+```
+
+解决方法:
+
+```sh
+改用: rollup-plugin-typescript2
+```
+
+6. `rollup.config.mjs` 中为什么不能直接`import pkg from 'package.json';`
+
+```sh
+# 而要改成:
+import pkg from './package.json' assert { type: 'json' };
+
+# 也可以 安装 @rollup/plugin-json 没试过 ，不知道可不可行
+
 ```
 
 ### Others

@@ -7,7 +7,7 @@
         "esnext"
       ],
       "baseUrl": ".",
-      "rootDir": ".",
+      "rootDir": "./packages", /* 需要设置该路径为./packages, 不然packages 会自动作为.d.ts的输出文件名 */
       "allowJs": true,
       "skipLibCheck": true,
       "esModuleInterop": true,
@@ -26,6 +26,10 @@
       "noEmit": true,
       "jsx": "react-jsx",
       "importHelpers": true,
+      "outDir": "dist",
+      "declaration": true,
+      "declarationDir": "dist/@types",
+      // "emitDeclarationOnly": true,  /* 只生成声明文件，不生成 js 文件 */ 
     },
     "include": [
       "packages"
