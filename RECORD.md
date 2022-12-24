@@ -18,6 +18,37 @@ $ git push origin v0.0.0-beta.1
 $ git push origin master --tags
 ```
 
+**添加 all-contributors**
+
+```sh
+# 参考文章: https://juejin.cn/post/6844903949883949063
+
+all-contributors-cli
+
+init 是初始化项目contributors
+
+yarn all-contributors init
+# Or
+npm run all-contributors init
+# Or directly execute the bin
+./node_modules/.bin/all-contributors init
+
+
+
+generate 是更新contributors
+
+add 新增contributor
+
+# Add new contributor <username>, who made a contribution of type <contribution>
+all-contributors add <username> <contribution>
+
+# Example:
+# all-contributors add jfmengels code,doc
+
+# generate table
+yarn all-contributors generate
+```
+
 ```sh
 rollup --config rollup.config.js
 
