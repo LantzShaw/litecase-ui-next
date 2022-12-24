@@ -10,7 +10,7 @@ A UI component library for react.
 $ npm i litecase-ui
 ```
 
-## Usage
+## Get Started
 
 ```tsx
 import { FC, ReactElement } from 'react';
