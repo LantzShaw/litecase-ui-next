@@ -88,7 +88,7 @@ module.exports = {
     '@babel/preset-typescript',
   ],
   //   plugins: [['@babel/plugin-transform-runtime', { useESModules: true }]], // NOTE: 配置该项,roullup打包将报错
-};
+}
 ```
 
 `rollup.config.js`
@@ -96,19 +96,19 @@ module.exports = {
 rollup 支持的打包文件的格式有 amd, cjs, es\esm, iife, umd。其中，amd 为 AMD 标准，cjs 为 CommonJS 标准，esm\es 为 ES 模块标准，iife 为立即调用函数， umd 同时支持 amd、cjs 和 iife.[参考文章](https://juejin.cn/post/7145090564801691684)
 
 ```js
-import typescript from '@rollup/plugin-typescript';
+import typescript from '@rollup/plugin-typescript'
 
 // 类型声明文件（需要单独输出）
-import dts from 'rollup-plugin-dts';
+import dts from 'rollup-plugin-dts'
 
 // ES6转ES5
-import babel from '@rollup/plugin-babel';
+import babel from '@rollup/plugin-babel'
 
 // 将非ES6语法转换为ES6可用
-import commonjs from '@rollup/plugin-commonjs';
+import commonjs from '@rollup/plugin-commonjs'
 
 // esm 帮助寻找node_modules里的包
-import { nodeResolve } from '@rollup/plugin-node-resolve';
+import { nodeResolve } from '@rollup/plugin-node-resolve'
 
 /**
  * 压缩代码
@@ -119,36 +119,43 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
  *
  * terser用的多
  */
-import { terser } from 'rollup-plugin-terser';
+import { terser } from 'rollup-plugin-terser'
 
-import path from 'path';
-import { existsSync } from 'fs';
+import path from 'path'
+import { existsSync } from 'fs'
 
 function resolveNestedImport(packageFolder, importee) {
-  console.log('----------', importee, packageFolder);
+  console.log('----------', importee, packageFolder)
 
-  const folder = importee.split('/')[2];
+  const folder = importee.split('/')[2]
 
-  console.log('---folder:', folder);
+  console.log('---folder:', folder)
 
-  const resolvedFilename = path.resolve(__dirname, `${packageFolder}/${folder}/index`);
+  const resolvedFilename = path.resolve(
+    __dirname,
+    `${packageFolder}/${folder}/index`
+  )
 
-  console.log('-----resolvedFilename-----', resolvedFilename);
+  console.log('-----resolvedFilename-----', resolvedFilename)
 
-  const resolvedTs = `${resolvedFilename}.ts`;
+  const resolvedTs = `${resolvedFilename}.ts`
 
   if (existsSync(resolvedTs)) {
-    return resolvedTs;
+    return resolvedTs
   }
 
-  return `${resolvedFilename}.js`;
+  return `${resolvedFilename}.js`
 }
 
 const nestedFolder = {
   resolveId: (importee) => {
-    console.log('---------importee: ', importee, resolveNestedImport('components', importee));
+    console.log(
+      '---------importee: ',
+      importee,
+      resolveNestedImport('components', importee)
+    )
 
-    return resolveNestedImport('components', importee);
+    return resolveNestedImport('components', importee)
 
     // if (importee.indexOf('@mui/base/') === 0) {
     //   return resolveNestedImport('mui-base', importee);
@@ -166,9 +173,9 @@ const nestedFolder = {
     //   return resolveNestedImport('mui-system', importee);
     // }
 
-    return undefined;
+    return undefined
   },
-};
+}
 
 export default {
   input: './packages/index.ts', // 精确到index.ts
@@ -216,7 +223,7 @@ export default {
       // plugins: [['@babel/plugin-transform-runtime', { useESModules: true }]],
     }),
   ],
-};
+}
 ```
 
 `rollup.config.js`参考
@@ -242,32 +249,32 @@ export default {
 // 所以我们上面的配置已经实现了按需加载了。
 
 // 去除注释等无效代码
-import awesome from 'rollup-plugin-awesome';
-import cleanup from 'rollup-plugin-cleanup';
+import awesome from 'rollup-plugin-awesome'
+import cleanup from 'rollup-plugin-cleanup'
 
-import { nodeResolve } from '@rollup/plugin-node-resolve';
+import { nodeResolve } from '@rollup/plugin-node-resolve'
 // rollup.js 编译源码中的模块引用默认只支持 ES6+的模块方式 import/export。然而大量的 npm 模块是基于 CommonJS 模块方式，这就导致了大量 npm 模块不能直接编译使用。
 // 需要添加 @rollup/plugin-commonjs 插件来支持基于 CommonJS 模块方式 npm 包。
-import commonjs from '@rollup/plugin-commonjs';
-import babel from '@rollup/plugin-babel';
+import commonjs from '@rollup/plugin-commonjs'
+import babel from '@rollup/plugin-babel'
 // 每个类库都要手动添加至 externals 未免太麻烦，这时候可以用 rollup-plugin-node-externals 插件，自动将外部类库声明为 externals。
-import externals from 'rollup-plugin-node-externals';
-import del from 'rollup-plugin-delete';
+import externals from 'rollup-plugin-node-externals'
+import del from 'rollup-plugin-delete'
 // rollup-plugin-postcss 默认集成了对 scss、less、stylus 的支持。
-import postcss from 'rollup-plugin-postcss';
+import postcss from 'rollup-plugin-postcss'
 // css加前缀
-import autoprefixer from 'autoprefixer';
+import autoprefixer from 'autoprefixer'
 // css 压缩
-import cssnano from 'cssnano';
+import cssnano from 'cssnano'
 
 // 支持Ts 文件
-import typescript from '@rollup/plugin-typescript';
+import typescript from '@rollup/plugin-typescript'
 
 // 打包产物清除调试代码
 // 用于从代码中删除 debugger 语句和函数。包括 assert.equal、console.log 等等
-import strip from '@rollup/plugin-strip';
+import strip from '@rollup/plugin-strip'
 
-import pkg from './package.json';
+import pkg from './package.json'
 
 export default [
   {
@@ -320,7 +327,7 @@ export default [
       { file: pkg.module, format: 'es' },
     ],
   },
-];
+]
 ```
 
 ```javascript
@@ -328,35 +335,35 @@ export default [
 
 // Rollup plugins
 // babel插件用于处理es6代码的转换，使转换出来的代码可以用于不支持es6的环境使用
-import babel from 'rollup-plugin-babel';
+import babel from 'rollup-plugin-babel'
 // resolve将我们编写的源码与依赖的第三方库进行合并
-import resolve from 'rollup-plugin-node-resolve';
+import resolve from 'rollup-plugin-node-resolve'
 // 解决rollup.js无法识别CommonJS模块
-import commonjs from 'rollup-plugin-commonjs';
+import commonjs from 'rollup-plugin-commonjs'
 // 全局替换变量比如process.env
-import replace from 'rollup-plugin-replace';
+import replace from 'rollup-plugin-replace'
 // 使rollup可以使用postCss处理样式文件less、css等
-import postcss from 'rollup-plugin-postcss';
+import postcss from 'rollup-plugin-postcss'
 // 可以处理组件中import图片的方式，将图片转换成base64格式，但会增加打包体积，适用于小图标
-import image from '@rollup/plugin-image';
+import image from '@rollup/plugin-image'
 // 压缩打包代码（这里弃用因为该插件不能识别es的语法，所以采用terser替代）
 // import { uglify } from 'rollup-plugin-uglify';
 // 压缩打包代码
-import { terser } from 'rollup-plugin-terser';
+import { terser } from 'rollup-plugin-terser'
 // import less from 'rollup-plugin-less';
 // PostCSS plugins
 // 处理css定义的变量
-import simplevars from 'postcss-simple-vars';
+import simplevars from 'postcss-simple-vars'
 // 处理less嵌套样式写法
-import nested from 'postcss-nested';
+import nested from 'postcss-nested'
 // 可以提前适用最新css特性（已废弃由postcss-preset-env替代，但还是引用进来了。。。）
 // import cssnext from 'postcss-cssnext';
 // 替代cssnext
-import postcssPresetEnv from 'postcss-preset-env';
+import postcssPresetEnv from 'postcss-preset-env'
 // css代码压缩
-import cssnano from 'cssnano';
+import cssnano from 'cssnano'
 
-const env = process.env.NODE_ENV;
+const env = process.env.NODE_ENV
 
 export default {
   // 入口文件我这里在components下统一导出所有自定义的组件
@@ -381,7 +388,7 @@ export default {
   // 自定义警告事件，这里由于会报THIS_IS_UNDEFINED警告，这里手动过滤掉
   onwarn: function (warning) {
     if (warning.code === 'THIS_IS_UNDEFINED') {
-      return;
+      return
     }
   },
   // 将模块视为外部模块，不会打包在库中
@@ -425,8 +432,17 @@ export default {
           'useEffect',
           'useMemo',
         ],
-        'node_modules/react-dom/index.js': ['render', 'unmountComponentAtNode', 'findDOMNode'],
-        'node_modules/gojs/release/go.js': ['Diagram', 'GraphLinksModel', 'Overview', 'Spot'],
+        'node_modules/react-dom/index.js': [
+          'render',
+          'unmountComponentAtNode',
+          'findDOMNode',
+        ],
+        'node_modules/gojs/release/go.js': [
+          'Diagram',
+          'GraphLinksModel',
+          'Overview',
+          'Spot',
+        ],
       },
     }),
     // 全局替换NODE_ENV，exclude表示不包含某些文件夹下的文件
@@ -437,7 +453,7 @@ export default {
     // 生产环境执行terser压缩代码
     env === 'production' && terser(),
   ],
-};
+}
 ```
 
 ### Questions
@@ -517,7 +533,28 @@ import pkg from './package.json' assert { type: 'json' };
 
 # 也可以 安装 @rollup/plugin-json 没试过 ，不知道可不可行
 
+
 ```
+
+7. BEM 规范参考
+   https://juejin.cn/post/6844903672162304013
+
+8. 修改`:root`变量
+
+```js
+document.documentElement.style.setProperty(
+  '--lc-default-background-color',
+  '#f40'
+)
+```
+
+9. css 可以使用 cssnano 压缩 , less 可以压缩嘛
+
+```sh
+rollup-plugin-less 也可以处理样式 但不知道能不能压缩.less
+```
+
+10. rollup 打包会生成\_virtual、node_modules（使用了第三方库后会生成），可以删除嘛（可以 删除后不会报错） 如何删除
 
 ### Others
 

@@ -1,27 +1,27 @@
 // import typescript from '@rollup/plugin-typescript';
-import typescript from 'rollup-plugin-typescript2';
-import dts from 'rollup-plugin-dts';
-import babel from '@rollup/plugin-babel';
-import commonjs from '@rollup/plugin-commonjs';
-import { nodeResolve } from '@rollup/plugin-node-resolve';
-import { terser } from 'rollup-plugin-terser';
-import externals from 'rollup-plugin-node-externals';
-import strip from '@rollup/plugin-strip';
-import postcss from 'rollup-plugin-postcss';
-import autoprefixer from 'autoprefixer';
-import cssnano from 'cssnano';
-import del from 'rollup-plugin-delete';
+import typescript from 'rollup-plugin-typescript2'
+import dts from 'rollup-plugin-dts'
+import babel from '@rollup/plugin-babel'
+import commonjs from '@rollup/plugin-commonjs'
+import { nodeResolve } from '@rollup/plugin-node-resolve'
+import { terser } from 'rollup-plugin-terser'
+import externals from 'rollup-plugin-node-externals'
+import strip from '@rollup/plugin-strip'
+import postcss from 'rollup-plugin-postcss'
+import autoprefixer from 'autoprefixer'
+import cssnano from 'cssnano'
+import del from 'rollup-plugin-delete'
 
 // 去除注释等无效代码
 // import awesome from 'rollup-plugin-awesome';
 // import cleanup from 'rollup-plugin-cleanup';
 
-import pkg from './package.json' assert { type: 'json' };
+import pkg from './package.json' assert { type: 'json' }
 
 const globals = {
   react: 'React',
   'react-dom': 'ReactDOM',
-};
+}
 
 export default {
   input: './packages/index.ts', // 入口文件
@@ -85,11 +85,12 @@ export default {
     strip(),
     // 默认集成了对 scss、less、stylus 的支持
     postcss({
+      // modules: true,
       plugins: [
         autoprefixer(), // css 加前缀
-        cssnano(), // css压缩
+        // cssnano(), // TODO: css压缩 打包less时不能使用 不然会使用时候会报错
       ],
-      extract: 'dist/index.css', // 抽离单独的 css 文件
+      extract: 'styles/index.less', // 抽离单独的 css 文件
     }),
     // 删除 dist 中构建的产物
     del({ targets: 'dist/*' }),
@@ -100,4 +101,4 @@ export default {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
     }),
   ],
-};
+}
