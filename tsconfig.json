@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-      "target": "es5",
+      "target": "ES5",
       "lib": [
         "dom",
         "dom.iterable",
@@ -25,7 +25,7 @@
       "strictNullChecks": true,
       "noEmit": true,
       "jsx": "react-jsx",
-      "importHelpers": true,
+      "importHelpers": true, /* 设置为true时，需要安装tslib，并且上面的target为es5或更低版本时才有效，可以在降级打包时候，起到压缩代码的作用 */
       "outDir": "dist",
       "declaration": true,
       "declarationDir": "dist/@types",

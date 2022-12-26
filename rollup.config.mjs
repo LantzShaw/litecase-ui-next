@@ -1,4 +1,4 @@
-// import typescript from '@rollup/plugin-typescript';
+// import typescript from '@rollup/plugin-typescript'
 import typescript from 'rollup-plugin-typescript2'
 import dts from 'rollup-plugin-dts'
 import babel from '@rollup/plugin-babel'
@@ -11,6 +11,14 @@ import postcss from 'rollup-plugin-postcss'
 import autoprefixer from 'autoprefixer'
 import cssnano from 'cssnano'
 import del from 'rollup-plugin-delete'
+
+import { dirname } from 'path'
+import { fileURLToPath } from 'url'
+
+// esm中 语法变了 不能再使用 path.resolve(__dirname, '')的方式了
+// __dirname是commonjs规范的内置变量。如果使用了esm，是不会注入这个变量的。
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 // 去除注释等无效代码
 // import awesome from 'rollup-plugin-awesome';
@@ -31,7 +39,7 @@ export default {
       file: 'dist/umd/litecase-ui.min.js', // NOTE: 当设置 preserveModules 为 时，不能再设置 file 了
       // dir: 'dist/umd',
       format: 'umd',
-      exports: 'named', // 指定导出模式（自动、默认、命名、无）
+      exports: 'named', // 指定导出模式（自动auto、默认default、命名names、无）
       name: pkg.name,
       sourcemap: false,
       // preserveModules: false, // umd不支持拆分
@@ -45,10 +53,16 @@ export default {
       name: pkg.name,
       exports: 'named', // 指定导出模式（自动、默认、命名、无）
       sourcemap: false,
+      // entryFileNames: '[name].js', // 这个设置输出.mjs
       preserveModules: true, // 保留原始模块结构
       preserveModulesRoot: 'packages', // 将保留的模块放在根级别的此路径下
       // globals,
     },
+    // {
+    //   file: pkg.module,
+    //   entryFileNames: "[name].es.js",
+    //   format: "esm",
+    // },
     {
       dir: 'dist/lib',
       format: 'cjs',
@@ -70,9 +84,14 @@ export default {
       // declarationDir: './types/index.d.ts',
     }),
     // 处理外部依赖
-    nodeResolve(),
+    nodeResolve({
+      // resolveOnly: ['classnames'],
+      // moduleDirectories: ['node_modules'],
+    }),
     // 支持基于 CommonJS 模块方式 npm 包
-    commonjs(),
+    commonjs({
+      transformMixedEsModules: true, // 允许导入的模块内commonjs与esmodule混用
+    }),
     // 压缩代码
     terser(),
     // 自动将dependencies依赖声明为 externals
@@ -99,6 +118,7 @@ export default {
       babelHelpers: 'bundled', // runtime or bundled
       exclude: '**/node_modules/**',
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      configFile: `${__dirname}/.babelrc.js`,
     }),
   ],
 }

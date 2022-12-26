@@ -18,6 +18,16 @@ $ git push origin v0.0.0-beta.1
 $ git push origin master --tags
 ```
 
+## Deployment
+
+Choose your new version number
+Set it in `package.json` and `bower.json`
+Create a tag: `git tag [version]`
+Push the tag: `git push --tags`
+Create a release in GitHub
+Run the publish to npm workflow
+Done.
+
 **添加 all-contributors**
 
 ```sh
@@ -233,6 +243,8 @@ export default {
 2. 项目参考:
    https://github.com/jiaozitang/react-masonry-component2/blob/dev/rollup.config.js
 3. https://juejin.cn/post/6847902221733101575
+
+4. 最佳实践参考: https://github.com/willson-wang/Blog/issues/99
 
 ```js
 // 打包输出文件保留原始模块结构
@@ -555,6 +567,20 @@ rollup-plugin-less 也可以处理样式 但不知道能不能压缩.less
 ```
 
 10. rollup 打包会生成\_virtual、node_modules（使用了第三方库后会生成），可以删除嘛（可以 删除后不会报错） 如何删除
+
+```sh
+会生成node_modules 文件是因为将项目依赖的第三方模块放在了devDependencies中了
+只需要将它移到dependencies中就可以了
+
+至于 `_vitual/_tslib.js` 暂时不清楚 可能是`rollup-plugin-typescript2`的问题
+
+# 参考文章:
+# https://github.com/ezolenko/rollup-plugin-typescript2/issues/282
+# https://github.com/ezolenko/rollup-plugin-typescript2/issues/240
+
+打包的umd不会出现这个`_vitual/_tslib.js`文件
+
+```
 
 ### Others
 
