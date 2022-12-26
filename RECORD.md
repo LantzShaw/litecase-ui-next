@@ -582,6 +582,98 @@ rollup-plugin-less 也可以处理样式 但不知道能不能压缩.less
 
 ```
 
+11. `package.json` 文件中 `publishConfig`
+
+```sh
+# 参考文章: https://blog.csdn.net/weixin_38384296/article/details/116403848
+
+# .npmrc文件中配置
+
+# 配置仓库认证信息，用于私有仓库读取或上传npm包：
+always-auth=true
+_auth="用户名:密码"的base64编码
+
+
+# 配置_authToken配置认证信息
+_authToken=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+
+# 配置当通过https向注册中心发出请求时，不进行SSL密钥验证（一般不推荐，不安全）：
+strict-ssl=false
+
+
+# package.json
+"publishConfig": {
+    "registry": "要发布的私有仓库地址，然后在.npmrc配置用户名密码"
+}
+
+```
+
+12. 使用 `verdaccio/verdaccio` 搭建私有仓库 npm 包
+
+```sh
+# windows
+# 参考文章: https://blog.csdn.net/crper/article/details/106806297
+# 参考文章: https://blog.csdn.net/crazy_jialin/article/details/109206070
+
+verdaccio 的配置文件在 `C:\Users\think\AppData\Roaming\verdaccio`
+
+
+# 参考文章: https://zhuanlan.zhihu.com/p/134603457
+# docker 下载镜像
+docker pull verdaccio/verdaccio
+
+# docker运行名为verdaccio的服务，端口号为4873
+docker run -it --name verdaccio -p 4873:4873 verdaccio/verdaccio
+
+
+#【解决】阿里云云服务器启动nginx，无法通过ip访问80端口
+# https://www.yuque.com/u548790/attention/woggz8
+# 考虑是 安全组 80端口是否开放
+
+# 使用curl命令在服务器内请求页面
+curl http:localhost:80
+
+
+
+
+如果你第一次在这个仓库发布npm包，请在发布前做如下几个操作：
+
+输入登录命令；
+npm adduser --registry http://your_ip:4873
+// 后续需要填写自己的相关信息
+// 填完回车就可以
+发布；
+npm publish --registry http://your_ip:4873
+刷新页面，就可以看到你刚发布的npm包了。
+
+
+# nrm 的基本使用
+nrm是一个npm仓库管理器，方便在不同的仓库之间切换，来去自如。
+比如，我们要下载私有仓库的内容，我们就需要把仓库地址，修改为对应的私有仓库，nrm可以让我快速切换。
+
+
+nrm大致使用如下，点击进一步了解请点击：npm - nrm
+
+// 全局安装
+npm install -g nrm
+ // 查看所有的仓库
+nrm ls
+// 切换仓库
+nrm use cnpm
+// 添加仓库
+nrm add <name> <address>
+
+
+全局安装nrm；npm install -g nrm
+nrm中加入我们的私有仓库；（第一次使用时添加即可）nrm add test http://ip:4873/
+
+切换npm源为私有仓库；nrm use test
+
+下载我们需要的npm包。
+npm i [包名]
+
+```
+
 ### Others
 
 some rollup plugins

@@ -11,6 +11,7 @@ import postcss from 'rollup-plugin-postcss'
 import autoprefixer from 'autoprefixer'
 import cssnano from 'cssnano'
 import del from 'rollup-plugin-delete'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
@@ -120,5 +121,10 @@ export default {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
       configFile: `${__dirname}/.babelrc.js`,
     }),
+    visualizer({
+      open: true,
+      gzipSize: true,
+      brotliSize: true,
+    }), // 打包体积分析工具
   ],
 }
