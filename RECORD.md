@@ -246,6 +246,8 @@ export default {
 
 4. 最佳实践参考: https://github.com/willson-wang/Blog/issues/99
 
+5. 从零搭建 react-native 组件库 https://juejin.cn/post/7159199880055881741
+
 ```js
 // 打包输出文件保留原始模块结构
 // 自动将 dependencies 依赖声明为 externals
