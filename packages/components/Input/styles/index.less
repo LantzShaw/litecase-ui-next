@@ -1,0 +1,11 @@
+@import '../../../styles/base.less';
+
+@primary-background-color: #6020df;
+
+:root {
+  --lc-input-default-border-color: @primary-background-color;
+}
+
+.@{lc-prefix}-input {
+  border: 1px solid var(--lc-input-default-border-color);
+}

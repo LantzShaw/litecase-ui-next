@@ -122,7 +122,7 @@ export default {
       configFile: `${__dirname}/.babelrc.js`,
     }),
     visualizer({
-      open: true,
+      open: true, // NOTE: 由于我打包了三个（esm/umd/cjs） 所以会启动三个
       gzipSize: true,
       brotliSize: true,
     }), // 打包体积分析工具

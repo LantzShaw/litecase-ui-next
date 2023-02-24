@@ -3,6 +3,8 @@ import classnames from 'classnames'
 
 import type { PrimaryButtonProps } from './Button.d'
 
+import { LC_PREFIX } from '../../constants/classNamePrefix'
+
 const Button: FC<PrimaryButtonProps> = (props): ReactElement => {
   const {
     type = 'default',
@@ -13,8 +15,6 @@ const Button: FC<PrimaryButtonProps> = (props): ReactElement => {
     children,
     ...rest
   } = props
-
-  const LC_PREFIX = 'lc'
 
   const classes = classnames([`${LC_PREFIX}-button`], className?.split(' '), {
     [`${LC_PREFIX}-button__default`]: type === 'default',
