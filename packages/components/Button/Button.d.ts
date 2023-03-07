@@ -1,9 +1,15 @@
-export type ButtonType = 'default' | 'primary' | 'secondary' | 'link' | 'text'
-export type ButtonSize = 'small' | 'medium' | 'large'
+import type { ReactNode, ReactStyle, ReactNodeClass } from 'react'
 
-// wraning info danger disabled loading dashed
+type ButtonType = 'default' | 'primary' | 'secondary' | 'link' | 'text'
+type ButtonSize = 'mini' | 'small' | 'medium' | 'large'
 
-export type BaseButtonProps = {
+// type: default primary secondary success wraning info danger dashed link text
+
+// loading
+
+// disabled
+
+type BaseButtonProps = {
   /** button types */
   type?: ButtonType
 
@@ -31,4 +37,6 @@ export type BaseButtonProps = {
   // [propName: string]: any
 } & Record<string, any>
 
-export type PrimaryButtonProps = {} & BaseButtonProps
+type PrimaryButtonProps = {} & BaseButtonProps
+
+export { BaseButtonProps, PrimaryButtonProps, ButtonSize, ButtonType }

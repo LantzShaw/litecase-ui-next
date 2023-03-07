@@ -1,14 +1,16 @@
 import classNames from 'classnames'
 import type { FC, ReactElement } from 'react'
 
+import { createNamespace } from '../../utils/create'
+
 import { InputProps } from './Input.d'
 
-import { LC_PREFIX } from '../../constants/classNamePrefix'
+const [bem] = createNamespace('input')
 
 const Input: FC<InputProps> = (props): ReactElement => {
-  const { disabled, className, ...rest } = props
+  const { size = 'medium', disabled = false, className, ...rest } = props
 
-  const classes = classNames([`${LC_PREFIX}-input`], className?.split(' '))
+  const classes = classNames([bem([size, { disabled }])], className?.split(' '))
 
   return (
     <>

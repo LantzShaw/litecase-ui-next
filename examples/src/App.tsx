@@ -23,6 +23,17 @@ function App() {
     <div>
       <Button
         type="primary"
+        size="small"
+        rounded
+        onClick={clickHandler}
+        // className="btn btn2"
+        // style={{ backgroundColor: '#000' }}
+      >
+        Click Me
+      </Button>
+
+      <Button
+        type="primary"
         size="medium"
         rounded
         onClick={clickHandler}
@@ -32,7 +43,16 @@ function App() {
         Click Me
       </Button>
 
-      <Input rounded />
+      <Button
+        type="primary"
+        size="large"
+        rounded
+        onClick={clickHandler}
+        // className="btn btn2"
+        // style={{ backgroundColor: '#000' }}
+      >
+        Click Me
+      </Button>
     </div>
   )
 }

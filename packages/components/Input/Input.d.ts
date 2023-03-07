@@ -7,11 +7,14 @@
 //   name?: string
 // }
 
+export type InputSize = small | medium | large
+
 type InputProps = {
   style?: ReactStyle
   className?: ReactNodeClass
+  size?: InputSize
   disabled?: boolean
   rounded?: boolean
-}
+} & Record<string, any>
 
 export { InputProps }

@@ -12,34 +12,35 @@
   border: none;
   cursor: pointer;
 
-  &__default {
+  &--default {
     background-color: var(--lc-button-default-background-color);
   }
 
-  &__primary {
+  &--primary {
     background-color: var(--lc-button-primary-background-color);
     color: #fff;
   }
 
-  &__size {
-    &--small {
-      padding: 4px;
-    }
-
-    &--medium {
-      padding: 8px;
-    }
-
-    &--large {
-      padding: 12px;
-    }
+  &--danger {
   }
 
-  &__round {
+  &--small {
+    padding: 4px;
+  }
+
+  &--medium {
+    padding: 8px;
+  }
+
+  &--large {
+    padding: 12px;
+  }
+
+  &--rounded {
     border-radius: 4px;
   }
 
-  &__disabled {
+  &--disabled {
     background-color: #b894ff;
     cursor: not-allowed;
   }

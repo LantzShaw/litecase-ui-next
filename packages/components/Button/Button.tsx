@@ -1,9 +1,11 @@
 import type { FC, ReactElement } from 'react'
 import classnames from 'classnames'
 
-import type { PrimaryButtonProps } from './Button.d'
+import { createNamespace } from '@litecase-ui/utils/create'
 
-import { LC_PREFIX } from '../../constants/classNamePrefix'
+const [bem] = createNamespace('button')
+
+import type { PrimaryButtonProps } from './Button.d'
 
 const Button: FC<PrimaryButtonProps> = (props): ReactElement => {
   const {
@@ -16,15 +18,10 @@ const Button: FC<PrimaryButtonProps> = (props): ReactElement => {
     ...rest
   } = props
 
-  const classes = classnames([`${LC_PREFIX}-button`], className?.split(' '), {
-    [`${LC_PREFIX}-button__default`]: type === 'default',
-    [`${LC_PREFIX}-button__primary`]: type === 'primary',
-    [`${LC_PREFIX}-button__size--small`]: size === 'small',
-    [`${LC_PREFIX}-button__size--medium`]: size === 'medium',
-    [`${LC_PREFIX}-button__size--large`]: size === 'large',
-    [`${LC_PREFIX}-button__round`]: rounded,
-    [`${LC_PREFIX}-button__disabled`]: disabled,
-  })
+  const classes = classnames(
+    [bem([type, size, { disabled, rounded }])],
+    className?.split(' ')
+  )
 
   return (
     <>
