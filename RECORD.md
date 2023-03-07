@@ -1,5 +1,7 @@
 # Record
 
+使用 husky 前记得先执行`"prepare": "husky install",` 不然会无效
+
 ```sh
 # 查看所有的tag
 $ git tag
